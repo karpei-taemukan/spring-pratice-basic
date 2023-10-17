@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring_memberBoard.dao.BoardDao">
+
+	<insert id="insertBoards" >
+	INSERT INTO BOARDS(BNO,BWRITER,BTITLE,BCONTENTS,BHITS,BDATE,BFILENAME,BSTATE)
+    VALUES(#{bno},#{bwriter}, #{btitle}, #{bcontents}, 0, SYSDATE,#{bfilename}, '1')
+	</insert>
+	
+	<select id="selectBoards_map" resultType="hashmap"  >
+		SELECT BO.*, NVL( RE.RECOUNT, 0 ) AS RECOUNT
+		FROM BOARDS BO
+			LEFT OUTER JOIN ( SELECT REBNO, COUNT(REBNO) AS RECOUNT
+			                  FROM REPLYS
+			                  WHERE RESTATE = '1'
+			                  GROUP BY REBNO ) RE
+			ON BO.BNO = RE.REBNO
+		WHERE BO.BSTATE = '1'
+		ORDER BY BO.BDATE DESC
+	</select>
+	
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
